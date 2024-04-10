@@ -1,32 +1,30 @@
-import logging
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
-logging.getLogger("pyrogram").setLevel(logging.WARNING)
+import requests
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
-import os
+TOKEN = "6965255627:AAGHAspJSX01m1vaKfp6faZdWRJg-hDQtKg"
 
-if bool(os.environ.get("WEBHOOK", False)):
-    from sample_config import Config
-else:
-    from config import Config
+def start(update, context):
+    update.message.reply_text("Welcome to the Zee5 Downloader Bot! Send me the Zee5 video link you want to download.")
 
-import pyrogram
+def download_zee5_video(update, context):
+    zee5_link = update.message.text
+    response = requests.get(zee5_link)
+    
+    # Add code here to extract the video URL from the response
+    
+    # Add code here to download the video
+    
+    update.message.reply_text("Video downloaded successfully! 🎥🔥")
 
+def main():
+    updater = Updater(TOKEN, use_context=True)
+    dp = updater.dispatcher
 
+    dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, download_zee5_video))
 
-if __name__ == "__main__" :
-    if not os.path.isdir(Config.DOWNLOAD_LOCATION):
-        os.makedirs(Config.DOWNLOAD_LOCATION)
-    plugins = dict(
-        root="plugins"
-    )
-    app = pyrogram.Client(
-        "Zee5",
-        bot_token=Config.TG_BOT_TOKEN,
-        api_id=Config.APP_ID,
-        api_hash=Config.API_HASH,
-        plugins=plugins
-    )
-    Config.AUTH_USERS.add(680815375)
-    app.run()
+    updater.start_polling()
+    updater.idle()
+
+if __name__ == '__main__':
+    main()
