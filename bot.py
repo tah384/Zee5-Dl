@@ -1,4 +1,7 @@
+
 import logging
+
+• Set up logging configurations
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -6,6 +9,7 @@ logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
 import os
 
+• Check if running in a webhook environment
 if bool(os.environ.get("WEBHOOK", False)):
     from sample_config import Config
 else:
@@ -13,9 +17,8 @@ else:
 
 import pyrogram
 
-
-
-if __name__ == "__main__" :
+• Initialize Pyrogram client
+if __name__ == "__main__":
     if not os.path.isdir(Config.DOWNLOAD_LOCATION):
         os.makedirs(Config.DOWNLOAD_LOCATION)
     plugins = dict(
